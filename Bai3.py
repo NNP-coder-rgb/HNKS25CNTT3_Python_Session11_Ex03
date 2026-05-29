@@ -32,10 +32,9 @@ product_list = [
     }
 ]
 
-option = 0
-found = False
+option = ''
 
-while option != 5:
+while option != '5':
     print()
     print('===== HỆ THỐNG QUẢN LÝ SẢN PHẨM YODY =====')
     print('1. Hiển thị danh sách sản phẩm')
@@ -44,18 +43,21 @@ while option != 5:
     print('4. Xóa sản phẩm theo mã')
     print('5. Thoát chương trình')
     
-    option = int(input('Nhập lựa chọn của bạn(1-5): '))
+    option = input('Nhập lựa chọn của bạn (1-5): ').strip()
     match option:
-        case 1:
+        case '1':
             print()
             if product_list == []:
                 print('Danh sách sản phẩm hiện đang trống.')
             else:
-                print('Danh sách sản phẩm hiện tại: ')
-                for i, item in enumerate(product_list, start = 1):
-                    print(f'{i}. Mã SP: {item["product_id"]} | Tên: {item["product_name"]} | Giá: {item["price"]} | Số lượng: {item["quantity"]}')
+                print('Danh sách sản phẩm hiện tại:')
+                print(f"{'STT':<4} | {'Mã SP':<7} | {'Tên sản phẩm':<18} | {'Giá bán':<10} | {'Số lượng'}")
+                print("-" * 60)
+                for i, item in enumerate(product_list, start=1):
+                    print(f"{i:<4} | {item['product_id']:<7} | {item['product_name']:<18} | {item['price']:<10,} | {item['quantity']}")
             print()
-        case 2:
+            
+        case '2':
             print()
             found = False
             input_pro_id = input('Mời bạn nhập vào mã sản phẩm: ').strip().upper()
@@ -65,28 +67,35 @@ while option != 5:
                     print('Mã sản phẩm đã tồn tại!')
                     found = True
                     break
+                    
             if found == False:
-                input_pro_name = input('Mời bạn nhập vào tên sản phẩm: ')
-                input_pro_price = int(input('Mời bạn nhập giá sản phẩm: '))
-                while input_pro_price < 0:
-                    print('[Lỗi] Giá sản phẩm phải là số nguyên dương, vui lòng nhập lại!')
-                    input_pro_price = int(input('Mời bạn nhập giá sản phẩm: '))
+                input_pro_name = input('Mời bạn nhập vào tên sản phẩm: ').strip()
                 
-                input_pro_quantity = int(input('Nhập vào số lượng sản phẩm: '))
-                while input_pro_quantity < 0:
-                    print('[Lỗi] Số lượng sản phẩm phải là số nguyên dương, vui lòng nhập lại!')
-                    input_pro_quantity = int(input('Nhập vào số lượng sản phẩm: '))
+                while True:
+                    price_str = input('Mời bạn nhập giá sản phẩm: ').strip()
+                    if price_str.isdigit():
+                        input_pro_price = int(price_str)
+                        break
+                    print('Lỗi: Giá sản phẩm phải là số nguyên dương, vui lòng nhập lại!')
+                
+                while True:
+                    qty_str = input('Nhập vào số lượng sản phẩm: ').strip()
+                    if qty_str.isdigit():
+                        input_pro_quantity = int(qty_str)
+                        break
+                    print('Lỗi: Số lượng sản phẩm phải là số nguyên dương, vui lòng nhập lại!')
 
                 new_pro = {
-                    "product_id" : input_pro_id,
-                    "product_name" : input_pro_name,
-                    "price" : input_pro_price,
-                    "quantity" : input_pro_quantity
+                    "product_id": input_pro_id,
+                    "product_name": input_pro_name,
+                    "price": input_pro_price,
+                    "quantity": input_pro_quantity
                 }
                 product_list.append(new_pro)
                 print('Đã thêm sản phẩm thành công!')
             print()
-        case 3:
+            
+        case '3':
             print()
             found = False
             input_id_search = input('Mời bạn nhập vào mã sản phẩm muốn cập nhật: ').strip().upper()
@@ -94,27 +103,30 @@ while option != 5:
             for item in product_list:
                 if input_id_search == item['product_id']:
                     found = True
-                    input_name_update = input('Mời bạn nhập vào tên sản phẩm: ')
-                    input_price_update = int(input('Mời bạn nhập giá sản phẩm: '))
-                    while input_price_update < 0:
-                        print('[Lỗi] Giá sản phẩm phải là số nguyên dương, vui lòng nhập lại!')
-                        input_price_update = int(input('Mời bạn nhập giá sản phẩm: '))
+                    item['product_name'] = input('Mời bạn nhập vào tên sản phẩm mới: ').strip()
+                    
+                    while True:
+                        price_str = input('Mời bạn nhập giá sản phẩm mới: ').strip()
+                        if price_str.isdigit():
+                            item['price'] = int(price_str)
+                            break
+                        print('Lỗi: Giá sản phẩm phải là số nguyên dương, vui lòng nhập lại!')
 
-
-                    input_quantity_update = int(input('Nhập vào số lượng sản phẩm: '))
-                    while input_quantity_update < 0:
-                        print('[Lỗi] Số lượng sản phẩm phải là số nguyên dương, vui lòng nhập lại!')
-                        input_quantity_update = int(input('Nhập vào số lượng sản phẩm: '))
-
-                    item['product_name'] = input_name_update
-                    item['price'] = input_price_update
-                    item['quantity'] = input_quantity_update
-
+                    while True:
+                        qty_str = input('Nhập vào số lượng sản phẩm mới: ').strip()
+                        if qty_str.isdigit():
+                            item['quantity'] = int(qty_str)
+                            break
+                        print('Lỗi: Số lượng sản phẩm phải là số nguyên dương, vui lòng nhập lại!')
+                        
+                    print('Đã cập nhật thông tin sản phẩm thành công!')
                     break
+                    
             if found == False:
                 print('Không tìm thấy sản phẩm cần cập nhật!')
             print()
-        case 4:
+            
+        case '4':
             print()
             found = False
             input_id_search = input('Mời bạn nhập vào mã sản phẩm muốn xóa: ').strip().upper()
@@ -130,19 +142,8 @@ while option != 5:
                 print('Không tìm thấy mã sản phẩm cần xoá!')
             print()
         
-        case 5:
+        case '5':
             print('Đã thoát chương trình')
+            
         case _:
             print("Lựa chọn không hợp lệ, vui lòng nhập lại!")
-
-                    
-
-                
-
-
-            
-
-                
-            
-
-
